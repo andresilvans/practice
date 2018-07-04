@@ -1,0 +1,62 @@
+题目：查找字符串第一次中只出现一次的字符
+
+方法一：
+      从头遍历字符串，当遍历到某个字符时，就将其依次和后面的字符相比较，若不相同，则这个字符就是我们要找的字符。该方法的时间复杂度较大为O(n^2)
+
+方法二：
+      借助数据容器哈希表，先将字符串遍历一遍，保存每个字符出现的次数。然后再依次遍历每个字符，每遍历一个字符就找出哈希表中对应的次数，这样第一个出现次数为1的字符就是我们要找的字符。时间复杂度为O(n)，空间复杂度为O(1)
+
+	* 
+     怎样去给这个哈希表嘞？（大小为256、键值为字符的ASCII码值的哈希表）
+
+
+            因为字符（char）一共有256种可能，所以创建一个长度为256的数组，每个字母根据其ASCII码值作为数组的下标对应数组的一个数字，数组中存储的为字符出现的次数。
+
+
+代码：
+
+#include <iostream> 
+using namespace std;
+char FirstNotRepeatingChar(char *str)
+{
+      // 字符串为空时返回
+      if (NULL == str)
+            return ;
+      //数组的下标为0~255（也就是哈希表的大小，因为char占一个字节，所以最多能表示256个字符）
+      const int tablesize = 256;
+      unsigned int Hashtable[tablesize];//哈希表的大小；
+      //初始化为0
+      for (unsigned int i = 0; i<tablesize; i++)
+            Hashtable[i] = 0;
+      // 从头开始遍历字符串，确定每个字符出现的次数
+      char *p = str;
+      while (*p != '\0')
+      {
+            Hashtable[*p]++;
+            p++;
+      }
+      // 找到只出现一次的字符
+      p = str;
+      while (*p != '\0')
+      {
+            if (Hashtable[*p] == 1)
+                  return *p;
+            p++;
+      }
+      // 如果字符串中的字符均出现两次及两次以上，返回
+      return '\0';
+}
+
+
+//测试函数：
+int main()
+{
+      //char str[] = "ababkdcdycghis";
+      //char str[] = "ababtthakchck";
+      char str[] = "";
+      char str[] = "world";
+      char ret = FirstNotRepeatingChar(str);
+      cout << "The first char is :" << ret << endl;
+      system("pause");
+      return 0;
+}
