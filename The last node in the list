@@ -1,0 +1,25 @@
+题目：
+        输入一个链表，输出该链表中倒数第k个结点
+
+
+class Solution {
+public:
+    ListNode* FindKthToTail(ListNode* pListHead, unsigned int k) {
+        if (pListHead == NULL || k == 0)
+            return NULL;
+        ListNode *first = pListHead;
+        for (int i = 1; i<k; i++)
+        {
+            first = first->next;
+            if (first == NULL)
+                return NULL;
+        }
+        ListNode *second = pListHead;
+        while (first->next)
+        {
+            first = first->next;
+            second = second->next;
+        }
+        return second;
+    }
+};
