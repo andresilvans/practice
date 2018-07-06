@@ -1,0 +1,95 @@
+/*
+Given a sorted array of integers, find the starting and ending position of a given target value.
+Your algorithm's runtime complexity must be in the order of O(log n).
+If the target is not found in the array, return[-1, -1].
+For example,
+Given[5, 7, 7, 8, 8, 10]and target value 8,
+return[3, 4].
+*/
+//给定一个已排序的整数数组，找到给定目标值的起始和结束位置。
+//算法的运行时复杂度必须按照O(log n)的顺序。
+//如果在数组中没有找到目标，返回[-1， - 1]。
+//例如,
+//给定[5, 7, 7, 8, 8, 10]和目标值8，
+//返回(3、4)。
+
+// 时间复杂度不满足的版本
+#include <vector>
+class Solution {
+public:
+	vector<int> searchRange(int A[], int n, int target) {
+		vector<int> V;
+		int left = 0;
+		int right = n - 1;
+		int mid = left + ((right - left) >> 1);
+		while (left <= right)
+		{
+			if (A[mid] == target)
+			{
+				//看左边是否有target
+				int MidLeft = mid;
+				while (A[MidLeft] == target)
+					MidLeft--;
+				MidLeft += 1;
+
+				//看右边是否有target
+				int MidRight = mid;
+				while (A[MidRight] == target)
+					MidRight++;
+				MidRight -= 1;
+
+				V.push_back(MidLeft < 0 ? 0 : MidLeft);
+				V.push_back(MidRight >= n ? n - 1 : MidRight);
+				return V;
+			}
+			else if (A[mid] > target)
+				right = mid - 1;
+			else
+				left = mid + 1;
+		}
+
+		V.push_back(-1);
+		V.push_back(-1);
+		return V;
+	}
+};
+
+//  最终版
+//  运行时间：7ms
+//  占用内存：464k
+class Solution {
+public:
+	vector<int> searchRange(int A[], int n, int target) {
+
+
+		int left = 0;
+		int right = n - 1;
+		while (left <= right)
+		{
+			int mid = left + ((right - left) >> 1);
+			if (A[mid] < target)
+				left = mid + 1;
+			else
+				right = mid - 1;
+		}
+
+		int left1 = 0;
+		int right1 = n - 1;
+		while (left1 <= right1)
+		{
+			int mid = left1 + ((right1 - left1) >> 1);
+			if (A[mid] > target)
+				right1 = mid - 1;
+			else
+				left1 = mid + 1;
+		}
+		vector<int> V(2, -1);
+		if (left <= right1)
+		{
+			V[0] = left;
+			V[1] = right1;
+		}
+		return V;
+
+	}
+};
