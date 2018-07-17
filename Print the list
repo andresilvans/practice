@@ -1,0 +1,98 @@
+1、题目描述（ 从尾到头打印链表）输入一个链表，按链表值从尾到头的顺序返回一个ArrayList（数组）
+
+方法一：通过借助容器vector和栈stack共同完成
+        思路：因为是从尾到头打印链表；一个是借助栈的原理（先进后出）先一个一个保存节点的值，再取top的值，并pop就能拿到从尾到头打印的链表。
+
+    因为题目要求返回ArrayList 所以可以使用容器vector出来一个数组
+
+/**
+*  struct ListNode {
+*        int val;
+*        struct ListNode *next;
+*        ListNode(int x) :
+*              val(x), next(NULL) {
+*        }
+*  };
+*/
+class Solution {
+public:
+    vector<int> printListFromTailToHead(ListNode* head) {
+        stack<int> S;
+        vector<int> V;
+        
+        ListNode* Pre = head;
+        ListNode* cur = head->next;
+        
+        if(NULL == head)
+            return V;
+        // 入栈保存
+        while(Pre)
+        {
+            S.push(Pre->val);
+            Pre = cur;
+            cur = cur->next;
+        }
+        
+        //数组
+        while(!S.empty())
+        {
+            int tmp = S.top();
+            V.push_back(tmp);
+            S.pop();
+        }
+        return V;
+    }
+};
+
+
+方法二： 不使用栈结构stack,直接利用翻转函数reverse()函数和容器vector
+
+/**
+*  struct ListNode {
+*        int val;
+*        struct ListNode *next;
+*        ListNode(int x) :
+*              val(x), next(NULL) {
+*        }
+*  };
+*/
+class Solution {
+public:
+    vector<int> printListFromTailToHead(ListNode* head) {
+       vector<int> V;
+        ListNode* cur = head;
+
+        while (cur)
+        {
+            V.push_back(cur->val);
+            cur = cur->next;
+        }
+
+        reverse(V.begin(),V.end());
+        return V;
+    }
+};
+
+方法三： 不使用容器vector,直接用print结合递归方式实现链表的反向打印
+        递归在本质上就是一个栈结构，于是很自然地想到用递归来实现 要实现反过来输出链表每访问到一个结点的时候， 先递归输出它后面的结点，再输出该结点自身，这样链表的输出结构就反过来了。
+
+struct ListNode {
+int val;
+struct ListNode *next;
+ListNode(int x) :
+val(x), next(NULL) {
+}
+};
+
+void printListFromTailToHead(ListNode* pListHead){
+    if(pListHead!=NULL){
+        
+        //print the next node first
+        if(pListHead->next!=NULL){
+            printListFromTailToHead(pListHead->next);    
+        }
+
+        // And then print the current node
+        print("%d",pListHead->val);
+    }
+}
