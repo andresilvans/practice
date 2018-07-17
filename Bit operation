@@ -1,0 +1,41 @@
+题目描述：
+    输入一个整数，输出该数二进制表示中1的个数。其中负数用补码表示。
+    
+  
+    class Solution {
+public:
+     int  NumberOf1(int n) {
+         int count = 0;
+         while(n)
+         {
+             //只要n不为0则其至少有一个1
+             count++;
+             n = n & (n-1);
+         }
+         return count;
+     }
+};
+
+
+我在网上又找了解法：觉得有可学之处，就放在这了
+（答案正确：包含有符号数的求解）
+移动的不是数据n而是1
+
+int NumberOf1(int n)
+{
+int count = 0;
+unsigned int flag = 1;
+while(flag){
+if(n & flag){
+count++;
+}
+flag = flag << 1;
+}
+return count;
+}
+此种解法不会担心陷入死循环，可以放心的求解出1的个数
+
+
+不太完美版（计算有符号数时，会出错）
+int NumberOf1(int n){int count = 0;while(n){if(n & 1){count++;}n = n >> 1;}return count;}
+这种解法是将数据n每次右移一位和1进行&运算来求得二进制中1的个数，对于无符号数来说没有问题，可是对于有符号数问题就大了，极有可能造成死循环。当n为负数时，n右移在最高位补1（为了保证数据为负数），因而最终就会形成死循环。
