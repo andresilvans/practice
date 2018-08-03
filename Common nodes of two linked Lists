@@ -1,0 +1,64 @@
+题目：输入两个链表，找出它们的第一个公共结点
+
+思路：  
+        如上图所示，两个链表从第一个公共结点开始，后面的所有结点都是重合的，并且不可能再出现分叉
+
+思路一：在第一个链表上顺序遍历每个结点，每遍历一个结点，就在第二个链表上顺序遍历每个结点，直到找到第一个公共结点。
+             时间复杂度为O(mn)
+思路二：首先计算出两个链表的长度length1和length2，然后让长链表先走|length1-length2|绝对值步，然后从两个链表开始遍历，比较两个链表的结点是否相等
+              时间复杂度为O(m+n)
+
+struct ListNode {
+      int val;
+      struct ListNode *next;
+      ListNode(int x) :
+            val(x), next(NULL) {
+      }
+};
+class Solution {
+public:
+      ListNode* FindFirstCommonNode(ListNode* pHead1, ListNode* pHead2) {
+            int length1 = lengthOfList(pHead1);  //链表1的长度
+            int length2 = lengthOfList(pHead2);  //链表2的长度
+            ListNode* pCur1 = pHead1;
+            ListNode* pCur2 = pHead2;
+            
+            int dif = 0;     //定义出差值，到时候判断哪个链表需要先走多少步
+            if (length1 < length2)
+            {
+                  dif = length2 - length1;
+                  while (dif > 0)
+                  {
+                        pCur2 = pCur2->next;
+                        dif--;
+                  }
+            }
+            else
+            {
+                  dif = length1 - length2;
+                  while (dif > 0)
+                  {
+                        pCur1 = pCur1->next;
+                        dif--;
+                  }
+            }
+            while (pCur1 != NULL && pCur2 != NULL &&pCur1 != pCur2)
+            {
+                  pCur1 = pCur1->next;
+                  pCur2 = pCur2->next;
+            }
+            return pCur1;
+      }
+      // 先求出两个链表的长度
+      int lengthOfList(ListNode* pHead)
+      {
+            ListNode* pCur = pHead;
+            int count = 0;
+            while (pCur != NULL)
+            {
+                  count++;
+                  pCur = pCur->next;
+            }
+            return count;
+      }
+};
