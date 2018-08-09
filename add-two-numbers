@@ -1,0 +1,66 @@
+题目描述：
+    You are given two linked lists representing two non-negative numbers.
+    The digits are stored in reverse order and each of their nodes contain a single digit.
+    Add the two numbers and return it as a linked list.
+    Input: (2 -> 4 -> 3) + (5 -> 6 -> 4)
+    Output: 7 -> 0 -> 8
+ 
+ 理解：
+    本题主要是类似数据在机器中存储的方式
+    我们平常所见的数据比如342，在链表中是逆向存储的所以就成了2->4->3这样了，同样5 -> 6 -> 4就是465
+    如果这样转换后，我们就会发现342+465=807，在十位上相加是超过10向前进一，但是链表是逆向的，所以就是向后进一。 
+具体思路：
+    先将两个链表等长度对应的数字之和计算出来，然后两个链表有一个为空了。
+    此时分两种情况（类似情况）：如果l1不为空，则将l1链表的值与“进位”相加再取余做为下一个结果元素的值。
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode(int x) : val(x), next(NULL) {}
+ * };
+ */
+class Solution {
+public:
+    ListNode *addTwoNumbers(ListNode *l1, ListNode *l2) {
+        if (NULL == l1 && NULL == l2)
+			return NULL;
+
+		// 定义一个新的链表
+		ListNode* head = new ListNode(0);
+		ListNode* pNode = head;
+
+		int num = 0;    // 相加可能会有进位
+		while (NULL != l1 && NULL != l2)
+		{
+			int sum = num + l1->val + l2->val;
+			pNode->next = new ListNode(sum % 10);
+			num = sum / 10;
+			l1 = l1->next;
+			l2 = l2->next;
+			pNode = pNode->next;
+		}
+
+		while (NULL != l1)
+		{
+			int sum = num + l1->val;
+			pNode->next = new ListNode(sum % 10);
+			num = sum / 10;
+			l1 = l1->next;
+			pNode = pNode->next;
+		}
+
+		while (NULL != l2)
+		{
+			int sum = num + l2->val;
+			pNode->next = new ListNode(sum % 10);
+			num = sum / 10;
+			l2 = l2->next;
+			pNode = pNode->next;
+		}
+
+		if (0 != num) 
+			pNode->next = new ListNode(num);
+		return head->next;
+    }
+};
