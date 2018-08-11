@@ -1,0 +1,73 @@
+题目描述：
+        操作给定的二叉树，将其变换为源二叉树的镜像
+        (就是除根节点之外的左右子树相互交换，形成镜像（就好比照镜子一般）)
+        
+代码实现：
+分析：
+        （1）递归写法：先序遍历树的每个结点，若遍历到的结点有子节点，则交换它的两个子节点
+        （2）非递归：借助栈去存放结点；（先序遍历）
+
+/*
+//  二叉树的镜像
+#include<iostream>
+using namespace std;
+struct TreeNode
+{
+      int val;
+      struct TreeNode *left;
+      struct TreeNode *right;
+      TreeNode(int x) :
+      val(x), left(NULL), right(NULL) {}
+};
+// 递归
+class Solution {
+public:
+      void Mirror(TreeNode *pRoot)
+      {
+            // 先判断
+            if (NULL == pRoot)
+                  return;
+            if (NULL == pRoot->left && NULL == pRoot->right)
+                  return;
+            // 交换左右结点
+            TreeNode* pNode = pRoot->left;
+            pRoot->left = pRoot->right;
+            pRoot->right = pNode;
+            // 递归一下左右子树
+            if (NULL != pRoot->left)
+                  Mirror(pRoot->left);
+            if (NULL != pRoot->right)
+                  Mirror(pRoot->right);
+      }
+};
+// 非递归
+#include<stack>
+class Solution {
+public:
+      void Mirror(TreeNode *pRoot)
+      {
+            // 判断树是否存在
+            if (NULL == pRoot)
+                  return;
+            // 借助栈来存放结点
+            stack<TreeNode*> s;
+            s.push(pRoot);
+            // 当栈里面存在元素，不为空时
+            while (!s.empty())
+            {
+                  TreeNode* pRoot = s.top();
+                  s.pop();
+                  if (NULL != pRoot->left || NULL != pRoot->right)
+                  {
+                        TreeNode* pCur = pRoot->left;
+                        pRoot->left = pRoot->right;
+                        pRoot->right = pCur;
+                  }
+                  if (NULL != pRoot->left)
+                        s.push(pRoot->left);
+                  if (NULL != pRoot->right)
+                        s.push(pRoot->right);
+            }
+      }
+};
+*/
