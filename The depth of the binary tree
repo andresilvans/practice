@@ -1,0 +1,25 @@
+题目描述：
+     输入一棵二叉树，求该树的深度。从根节点到叶节点依次经过的结点（含根、叶结点）形成树的一条路径，最长路径的长度为树的深度
+
+代码实现：
+struct TreeNode {
+      int val;
+      struct TreeNode *left;
+      struct TreeNode *right; 
+      TreeNode(int x) :
+      val(x), left(NULL), right(NULL) {}
+};
+class Solution {
+public:
+      int TreeDepth(TreeNode* pRoot)
+      {
+            // 判断树是否存在
+            if (NULL == pRoot)
+                  return 0;
+            int leftcount = 1;
+            int rightcount = 1;
+            leftcount += TreeDepth(pRoot->left);
+            rightcount += TreeDepth(pRoot->right);
+            return leftcount > rightcount ? leftcount : rightcount;
+      }
+};
