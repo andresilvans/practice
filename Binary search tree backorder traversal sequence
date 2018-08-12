@@ -1,0 +1,84 @@
+题目描述输入一个整数数组，判断该数组是不是某二叉搜索树的后序遍历的结果。如果是则输出Yes,否则输出No。假设输入的数组的任意两个数字都互不相同。
+解析：
+        后序遍历：左右根
+
+
+思路：
+已知条件：后序序列最后一个值为root；二叉搜索树左子树值都比root小，右子树值都比root大。
+1、确定root；
+2、遍历序列（除去root结点），找到第一个大于root的位置，则该位置左边为左子树，右边为右子树；
+3、遍历右子树，若发现有小于root的值，则直接返回false；
+4、分别判断左子树和右子树是否仍是二叉搜索树（即递归步骤1、2、3）。
+class Solution {
+public:
+    bool VerifySquenceOfBST(vector<int> sequence) {
+        vector<int> leftTree,rightTree;
+        int root; // 根结点
+        if(sequence.empty()) return false;
+        int index = 0; // 标记左右子树界限
+        int len = sequence.size();
+        root = sequence[len-1];
+        int i=0;
+        for(;i<len-1;++i)
+        {
+            if(sequence[i]>root) break; // 找到第一个大于根结点的位置，则左边为左子树，右边为右子树
+        }
+        for(int j=i;j<len-1;++j) // 循环时去除root，因此为len-1
+        {
+            if(sequence[j]<root) return false; // 有一个小于root，则返回false
+        }
+         
+        if(i!=0)
+        {
+            // 即有左子树
+            for(int m=0;m<i;++m)
+            {
+                leftTree.push_back(sequence[m]);
+            }
+        }
+        if(i!=len-2)
+        {
+            for(int j=i;j<len-1;++j)
+            {
+                rightTree.push_back(sequence[j]);
+            }
+        }
+         
+        bool left = true,right = true; // 看左右子树是否是二叉搜索树
+        if(leftTree.size()>1) VerifySquenceOfBST(leftTree);
+        if(rightTree.size()>1) VerifySquenceOfBST(rightTree);
+         
+        return (left&&right);
+    }
+};
+
+// ？？？ 还不是很懂
+
+// 二叉搜索树的后序序列的规则是：左右根；
+// 最后一个元素为根root，去掉根元素，剩下的分为两段，前半段左子树小于root，后半段右子树大于root，且这两段（子树）都是合法的后序序列
+
+class Solution {
+public:
+    
+    bool JudgeSequence(vector<int>& sequence,int left,int right)
+    {
+        if(left>right)
+            return true;
+        int i = right;
+        while (i > left && sequence[i - 1] >sequence[right])
+            --i;
+        for (int j = i - 1; j >= left; --j)
+        {
+            if (sequence[j] > sequence[right])
+                return false;
+        }
+        return JudgeSequence(sequence, left, i - 1) && (JudgeSequence(sequence, i, right - 1));
+    }
+    
+    bool VerifySquenceOfBST(vector<int> sequence) {
+        // size不一样就是错的
+        if(!sequence.size())
+            return false;
+        return JudgeSequence(sequence, 0, sequence.size() - 1);
+    }
+};
