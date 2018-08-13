@@ -1,0 +1,57 @@
+题目描述输入某二叉树的前序遍历和中序遍历的结果，请重建出该二叉树。假设输入的前序遍历和中序遍历的结果中都不含重复的数字。例如输入前序遍历序列{1,2,4,7,3,5,6,8}和中序遍历序列{4,7,2,1,5,3,8,6}，则重建二叉树并返回。
+思路：
+
+        可以根据前序遍历判断出根节点是哪一个，然后根据中序遍历可以知道它的左子树都有哪些结点，右子树都有哪些结点
+        根据二叉树前序遍历的特点（根-左-右），每次读取的第一个值一定是根节点，这样我们可以在中序遍历的序列中找到当前的根节点的位置。 
+        根据中序遍历的特点（左-根-右），当确定了一个根节点后，其左边序列就是这个根节点的左子树，右边序列就是其右子树。 
+如此看来，我们每次都需要在前序遍历中找根节点并创建一个根节点，然后在中序遍历中确定根节点位置，并确定当前根节点的左右子树，
+然后以同样的方法去构建左右子树。这整个过程其实是一个递归的过程。
+        在实现的时候，我们需要每次记录根节点的左右序列值，以便下一次找根节点构建树，因此这里使用vector来记录
+
+代码实现：
+// 重建二叉树
+#include<iostream>
+using namespace std;
+#include<vector>
+//Definition for binary tree
+struct TreeNode {
+    int val;
+    TreeNode *left;
+    TreeNode *right;
+    TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+};
+class Solution {
+public:
+      TreeNode* reConstructBinaryTree(vector<int> pre, vector<int> vin) {
+            // 倘若前序和中序序列都为空时，直接返回
+            if (pre.empty() || vin.empty())
+                  return NULL;
+            //在前序遍历中pre中找根节点，并确定其在vin的位置
+            int i;
+            for (i = 0; i < vin.size(); i++)
+            {
+                  if (vin[i] == pre[0])
+                        break;
+            }
+            //找到根节点之后，开始构建新树
+            TreeNode* pRoot = new TreeNode(pre[0]);
+            //根据中序遍历将根节点左右两侧一分为二，根节点的左侧为左子树，右侧为右子树
+            vector<int> vinLeft,vinRight;
+            vector<int> preLeft, preRight;
+            //先将前序、中序中根节点的左右子树记录下来
+            for (int j = 0; j < i; j++)
+            {
+                  preLeft.push_back(pre[j+1]);
+                  vinLeft.push_back(vin[j]);
+            }
+            for (int j = i+1; j > vin.size(); j++)
+            {
+                  preLeft.push_back(pre[j]);
+                  vinLeft.push_back(vin[j]);
+            }
+            // 构建新树的左右子树
+            pRoot->left = reConstructBinaryTree(preLeft, vinLeft);
+            pRoot->right = reConstructBinaryTree(preRight, vinRight);
+            return pRoot;
+      }
+};
