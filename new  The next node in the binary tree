@@ -1,0 +1,58 @@
+题目中的二叉树的中序遍历序列是d，b，h，e，i，a，f，c，g。
+分三种情况
+1、如果一个结点有右子树，那么它的下一个结点就是它的右子树的最左子结点。
+   也就是说，从右子结点出发一直沿着指向左子结点的指针，我们就可以找到它的下一个结点。
+   例如图中结点b的下一个结点是h，结点a的下一结点是f。
+2、如果一个结点没有右子树，那么如果它是其父亲的左子结点，则它的下一个结点就是它的父亲结点。
+    例如图中结点d的下一个结点是b，f的下一个结点是c。
+3、如果一个结点既没有右子树，也不是父亲的左子结点，那么我们沿着指向父亲结点的指针一直向上遍历，直到找到一个结点，该结点是其父亲结点的左子结点。
+    如果这样的结点存在，那么该结点的父亲结点就是我们要找的下一个结点。
+    例如，对于结点i，我们首先找到其父亲结点e，e是其父亲结点的右子结点，
+    所以我们继续找到b，b是其父亲结点的左子结点。
+    所以i的下一个结点就是b的父亲结点，即a。对于结点g，我们首先沿着指向父亲结点的指针找到c，c是其父亲结点的右子结点，所以我们继续找到a。
+    因为a是树的根节点，没有父亲结点，所以g的下一个结点不存在。
+    
+代码实现：
+// 二叉树的下一个结点
+#include<iostream>
+using namespace std;
+struct TreeLinkNode {
+      int val;
+      struct TreeLinkNode *left;
+      struct TreeLinkNode *right;
+      struct TreeLinkNode *next;
+      TreeLinkNode(int x) :val(x), left(NULL), right(NULL), next(NULL) {
+      }
+};
+class Solution {
+public:
+      TreeLinkNode* GetNext(TreeLinkNode* pNode)
+      {
+            if (!pNode)
+                  return pNode;
+            TreeLinkNode* pCur = NULL;
+            //1、判断是否有右孩子
+            if (NULL != pNode->right)
+            {
+                  pCur = pNode->right;
+                  while (NULL != pCur->left)
+                        pCur = pCur->left;
+                  return pCur;
+            }
+            // 2、判断是否是其父节点的左孩子
+            if (NULL == pNode->next)
+                  return NULL;
+            if (pNode == pNode->next->left)
+                  return pNode->next;
+            // 向上找其父节点，直到父节点是其父节点的父节点的左孩子
+            pCur = pNode->next;
+            while (NULL != pCur->next)
+            {
+                  if (pCur == pCur->next->left)
+                        return pCur->next;
+                  // 继续向上找父节点
+                  pCur = pCur->next;
+            }
+            return NULL;
+      }
+};
