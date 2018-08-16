@@ -1,0 +1,47 @@
+题目描述        
+    输入一颗二叉树的跟节点和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。路径定义为从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。(注意: 在返回值的list中，数组长度大的数组靠前)
+// 思路：先序遍历（根左右）
+
+代码实现：
+// 二叉树中和为某一值的路径
+#include<iostream>
+using namespace std;
+#include<vector>
+struct TreeNode {
+      int val;
+      struct TreeNode *left;
+      struct TreeNode *right;
+      TreeNode(int x) :
+      val(x), left(NULL), right(NULL) {
+      }
+};
+class Solution {
+public:
+      void findAllPath(TreeNode* root, int expectNumber, int sum, vector<vector<int>>& allpath, vector<int>& path)
+      {
+            //记录当前访问的结点
+            path.push_back(root->val);
+            //记录访问到当前节点 所有结点的和
+            sum += root->val;
+            //倘若是叶子结点，看是否满足相等
+            if (NULL == root->left && NULL == root->right && sum == expectNumber)
+                  allpath.push_back(path);
+            // 处理左右子树
+            if (NULL != root->left)
+                  findAllPath(root->left, expectNumber, sum, allpath, path);
+            if (NULL != root->right)
+                  findAllPath(root->right, expectNumber, sum, allpath, path);
+            // 如果是叶子结点，但不满足相等的要求,退回到父结点，删除当前节点
+            path.pop_back();
+      }
+      vector<vector<int> > FindPath(TreeNode* root, int expectNumber) {
+            vector<vector<int>> allpath;
+            vector<int> path;
+            int sum = 0;  // 记录结点相加的值
+            if (NULL == root)
+                  return allpath;
+            findAllPath(root, expectNumber, sum, allpath, path);
+            return allpath;
+      }
+};
+
